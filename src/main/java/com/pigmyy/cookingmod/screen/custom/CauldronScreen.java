@@ -12,6 +12,8 @@ import net.minecraft.world.entity.player.Inventory;
 public class CauldronScreen extends AbstractContainerScreen<CauldronMenu> {
     private static final ResourceLocation GUI_TEXTURE =
             ResourceLocation.fromNamespaceAndPath(CookingMod.MOD_ID, "textures/gui/cauldron/cauldron_gui.png");
+    private static final ResourceLocation BAR_TEXTURE =
+            ResourceLocation.fromNamespaceAndPath(CookingMod.MOD_ID, "textures/gui/progress_bar.png");
 
     public CauldronScreen(CauldronMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
@@ -26,6 +28,14 @@ public class CauldronScreen extends AbstractContainerScreen<CauldronMenu> {
         int y = (height - imageHeight) / 2;
 
         pGuiGraphics.blit(GUI_TEXTURE, x, y, 0, 0, imageWidth, imageHeight);
+
+        renderProgressBar(pGuiGraphics, x, y);
+    }
+
+    private void renderProgressBar(GuiGraphics guiGraphics, int x, int y) {
+        if(menu.isCooking()) {
+            guiGraphics.blit(BAR_TEXTURE, x + 45, y + 40, 0, 0, menu.getScaledProgressBar(), 7, 87, 7);
+        }
     }
 
     protected void renderLabels(GuiGraphics pGuiGraphics, int mouseX, int MouseY) {

@@ -7,10 +7,7 @@ import com.pigmyy.cookingmod.screen.ModMenuTypes;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ContainerLevelAccess;
-import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -20,22 +17,37 @@ import org.jetbrains.annotations.Nullable;
 public class CauldronMenu extends AbstractContainerMenu {
     public final CauldronBlockEntity blockEntity;
     private final Level level;
+    private final ContainerData data;
 
 
     public CauldronMenu(int pContainerId, Inventory inv, FriendlyByteBuf extraData) {
-        this(pContainerId, inv, inv.player.level().getBlockEntity(extraData.readBlockPos()));
+        this(pContainerId, inv, inv.player.level().getBlockEntity(extraData.readBlockPos()), new SimpleContainerData(4));
     }
 
-    public CauldronMenu(int pContainerId, Inventory inv, BlockEntity blockEntity) {
+    public CauldronMenu(int pContainerId, Inventory inv, BlockEntity blockEntity, ContainerData data) {
         super(ModMenuTypes.CAULDRON_MENU.get(), pContainerId);
         this.blockEntity = ((CauldronBlockEntity) blockEntity);
         this.level = inv.player.level();
+        this.data = data;
 
         addPlayerInventory(inv);
         addPlayerHotbar(inv);
 
-//        this.addSlot(new SlotItemHandler(this.blockEntity.inventory, i, 45, 53));
         addIngredientSlots();
+
+        addDataSlots(data);
+    }
+
+    public boolean isCooking() {
+        return data.get(0) > 0;
+    }
+
+    public int getScaledProgressBar() {
+        int progress = this.data.get(0);
+        int maxProgress = this.data.get(1);
+        int barPixelSize = 87;
+
+        return maxProgress != 0 && progress != 0 ? progress * barPixelSize / maxProgress : 0;
     }
 
 

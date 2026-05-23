@@ -1,6 +1,7 @@
 package com.pigmyy.cookingmod.block.custom;
 
 import com.mojang.serialization.MapCodec;
+import com.pigmyy.cookingmod.block.entity.ModBlockEntities;
 import com.pigmyy.cookingmod.block.entity.custom.CauldronBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -22,6 +23,8 @@ import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.BooleanOp;
@@ -101,6 +104,12 @@ public class Cauldron extends BaseEntityBlock {
         builder.add(LEVEL, SOUPTYPE);
     }
 
+    // HELPER TO CHANGE SOUP TYPE FROM OUTSIDE
+    public static void changeSoupState(Level pLevel, BlockPos pPos, SoupType type) {
+        BlockState pState = pLevel.getBlockState(pPos);
+        pLevel.setBlockAndUpdate(pPos, pState.setValue(SOUPTYPE, type));
+    }
+
 
 
 
@@ -166,7 +175,7 @@ public class Cauldron extends BaseEntityBlock {
             pLevel.setBlockAndUpdate(pPos,pState.setValue(SOUPTYPE, SoupType.CARROT));
 
 
-            // ITEMS
+            // OPEN MENU
         }else if (pLevel.getBlockEntity(pPos) instanceof CauldronBlockEntity cauldronBlockEntity) {
             if((!pPlayer.isCrouching() && !pLevel.isClientSide) || (pPlayer.isCrouching() && !pLevel.isClientSide && pStack.isEmpty())){
                 ((ServerPlayer) pPlayer).openMenu(new SimpleMenuProvider(cauldronBlockEntity, Component.literal("Cauldron")), pPos);
@@ -179,7 +188,18 @@ public class Cauldron extends BaseEntityBlock {
         }
 
 
+
         return ItemInteractionResult.SUCCESS;
+    }
+    @Nullable
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
+        if (pLevel.isClientSide()) {
+            return null;
+        }
+
+        return createTickerHelper(pBlockEntityType, ModBlockEntities.CAULDON_BE.get(),
+                (level, blockPos, blockState, CauldronBlockEntity) -> CauldronBlockEntity.tick(level, blockPos, blockState));
     }
 }
 
