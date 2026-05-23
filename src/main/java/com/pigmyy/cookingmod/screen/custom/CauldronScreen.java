@@ -27,4 +27,14 @@ public class CauldronScreen extends AbstractContainerScreen<CauldronMenu> {
 
         pGuiGraphics.blit(GUI_TEXTURE, x, y, 0, 0, imageWidth, imageHeight);
     }
+
+    protected void renderLabels(GuiGraphics pGuiGraphics, int mouseX, int MouseY) {
+        String titleText = this.title.getString();
+
+        int x = (this.imageWidth / 2) - (this.font.width(titleText) / 2);
+
+        pGuiGraphics.drawString(this.font, titleText, x, 6, 4210752, false);
+
+        pGuiGraphics.drawString(this.font, this.playerInventoryTitle, this.inventoryLabelX, this.inventoryLabelY, 4210752, false);
+    }
 }

@@ -25,7 +25,7 @@ import org.jetbrains.annotations.Nullable;
 public class CauldronBlockEntity extends BlockEntity implements MenuProvider {
 
     // INVENTORY
-    public final ItemStackHandler inventory = new ItemStackHandler(3) {
+    public final ItemStackHandler inventory = new ItemStackHandler(4) {
         @Override
         protected int getStackLimit(int slot, @NotNull ItemStack stack) {
             return 1;

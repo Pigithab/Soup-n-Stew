@@ -168,23 +168,13 @@ public class Cauldron extends BaseEntityBlock {
 
             // ITEMS
         }else if (pLevel.getBlockEntity(pPos) instanceof CauldronBlockEntity cauldronBlockEntity) {
-            if(pPlayer.isCrouching() && !pLevel.isClientSide){
+            if((!pPlayer.isCrouching() && !pLevel.isClientSide) || (pPlayer.isCrouching() && !pLevel.isClientSide && pStack.isEmpty())){
                 ((ServerPlayer) pPlayer).openMenu(new SimpleMenuProvider(cauldronBlockEntity, Component.literal("Cauldron")), pPos);
                 return ItemInteractionResult.SUCCESS;
             }
 
             if(pPlayer.isCrouching() && pLevel.isClientSide()) {
                 return ItemInteractionResult.SUCCESS;
-            }
-
-            if(cauldronBlockEntity.inventory.getStackInSlot(0).isEmpty() && !pStack.isEmpty()) {
-                cauldronBlockEntity.inventory.insertItem(0, pStack.copy(), false);
-                pStack.shrink(1);
-                pLevel.playSound(pPlayer, pPos, SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS, 1f, 1f);
-            } else if(pStack.isEmpty()) {
-                ItemStack stackOnCauldron = cauldronBlockEntity.inventory.extractItem(0, 1, false);
-                pPlayer.setItemInHand(InteractionHand.MAIN_HAND, stackOnCauldron);
-                pLevel.playSound(pPlayer, pPos, SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS, 1f, 1f);
             }
         }
 

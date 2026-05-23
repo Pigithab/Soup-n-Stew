@@ -34,7 +34,7 @@ public class CauldronMenu extends AbstractContainerMenu {
         addPlayerInventory(inv);
         addPlayerHotbar(inv);
 
-//        this.addSlot(new SlotItemHandler(this.blockEntity.inventory, 0, 80, 19));
+//        this.addSlot(new SlotItemHandler(this.blockEntity.inventory, i, 45, 53));
         addIngredientSlots();
     }
 
@@ -55,7 +55,7 @@ public class CauldronMenu extends AbstractContainerMenu {
     private static final int TE_INVENTORY_FIRST_SLOT_INDEX = VANILLA_FIRST_SLOT_INDEX + VANILLA_SLOT_COUNT;
 
     // THIS YOU HAVE TO DEFINE!
-    private static final int TE_INVENTORY_SLOT_COUNT = 3;  // must be the number of slots you have!
+    private static final int TE_INVENTORY_SLOT_COUNT = 4;  // must be the number of slots you have!
     @Override
     public ItemStack quickMoveStack(Player playerIn, int pIndex) {
         Slot sourceSlot = slots.get(pIndex);
@@ -112,8 +112,11 @@ public class CauldronMenu extends AbstractContainerMenu {
     }
 
     private void addIngredientSlots() {
-        for (int i = 0; i < 3; ++i){
-            this.addSlot(new SlotItemHandler(this.blockEntity.inventory, i, 45 + 35 * i, 19));
+        for (int i = 0; i < 4; ++i){
+            if (i == 3) {this.addSlot(new SlotItemHandler(this.blockEntity.inventory, i, 45, 53)); }
+            else {
+                this.addSlot(new SlotItemHandler(this.blockEntity.inventory, i, 45 + 35 * i, 19));
+            }
         }
     }
 }
