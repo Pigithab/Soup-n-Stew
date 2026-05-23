@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "level=0,soup_type=water":  { "model": "cookingmod:block/cauldron" },
+    "level=0,soup_type=carrot": { "model": "cookingmod:block/cauldron" },
+    "level=0,soup_type=potato": { "model": "cookingmod:block/cauldron" },
+
+    "level=1,soup_type=water":  { "model": "cookingmod:block/cauldron_level1" },
+    "level=1,soup_type=carrot": { "model": "cookingmod:block/cauldron_level1" },
+    "level=1,soup_type=potato": { "model": "cookingmod:block/cauldron_level1" },
+
+    "level=2,soup_type=water":  { "model": "cookingmod:block/cauldron_level2" },
+    "level=2,soup_type=carrot": { "model": "cookingmod:block/cauldron_level2" },
+    "level=2,soup_type=potato": { "model": "cookingmod:block/cauldron_level2" },
+
+    "level=3,soup_type=water":  { "model": "cookingmod:block/cauldron_level3" },
+    "level=3,soup_type=carrot": { "model": "cookingmod:block/cauldron_level3" },
+    "level=3,soup_type=potato": { "model": "cookingmod:block/cauldron_level3" }
+  }
+}

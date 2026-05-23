@@ -1,0 +1,195 @@
+package com.pigmyy.cookingmod.block.custom;
+
+import com.mojang.serialization.MapCodec;
+import com.pigmyy.cookingmod.block.entity.custom.CauldronBlockEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.StringRepresentable;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.SimpleMenuProvider;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.BooleanOp;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.Nullable;
+
+
+public class Cauldron extends BaseEntityBlock {
+
+
+    // Default Cauldron Shape Copied from 'AbstractCauldronBlock.java'
+    private static final VoxelShape INSIDE = box(2.0, 4.0, 2.0, 14.0, 16.0, 14.0);
+    protected static final VoxelShape SHAPE = Shapes.join(
+            Shapes.block(),
+            Shapes.or(box(0.0, 0.0, 4.0, 16.0, 3.0, 12.0), box(4.0, 0.0, 0.0, 12.0, 3.0, 16.0), box(2.0, 0.0, 2.0, 14.0, 3.0, 14.0), INSIDE),
+            BooleanOp.ONLY_FIRST);
+    public static final MapCodec<Cauldron> CODEC = simpleCodec(Cauldron::new);
+
+
+    public Cauldron(Properties pProperties) {
+        super(pProperties);
+        //DEFAULT STATES
+
+        this.registerDefaultState(this.stateDefinition.any()
+                // IS_FULL INTEGER
+                .setValue(LEVEL, 0)
+                // SOUP_TYPE ENUM
+                .setValue(SOUPTYPE, SoupType.WATER));
+
+
+    }
+
+    @Override
+    protected VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
+        return SHAPE;
+    }
+
+    @Override
+    protected MapCodec<? extends BaseEntityBlock> codec() {
+        return CODEC;
+    }
+
+    @Override
+    protected RenderShape getRenderShape(BlockState pState) {
+        return RenderShape.MODEL;
+    }
+
+    @Override
+    public @Nullable BlockEntity newBlockEntity(BlockPos pPos, BlockState pState){
+        return new CauldronBlockEntity(pPos, pState);
+    }
+
+    @Override
+    protected void onRemove(BlockState pState, Level pLevel, BlockPos pPos, BlockState pNewState, boolean pIsMoving) {
+                if(pState.getBlock() != pNewState.getBlock()) {
+                    if(pLevel.getBlockEntity(pPos) instanceof CauldronBlockEntity CauldronBlockEntity) {
+                        CauldronBlockEntity.drops();
+                        pLevel.updateNeighbourForOutputSignal(pPos, this);
+
+                    }
+                }
+                super.onRemove(pState, pLevel, pPos, pNewState, pIsMoving);
+    }
+
+
+    // Integer Water "LEVEL"
+    public static final net.minecraft.world.level.block.state.properties.IntegerProperty LEVEL =
+            net.minecraft.world.level.block.state.properties.IntegerProperty.create("level", 0, 3);
+    // Enum "SOUPTYPE"
+    public static final net.minecraft.world.level.block.state.properties.EnumProperty<SoupType> SOUPTYPE =
+            net.minecraft.world.level.block.state.properties.EnumProperty.create("soup_type", SoupType.class);
+
+    @Override
+    protected void createBlockStateDefinition(net.minecraft.world.level.block.state.StateDefinition.Builder<Block, BlockState> builder) {
+        builder.add(LEVEL, SOUPTYPE);
+    }
+
+
+
+
+    // INTERACT
+    @Override
+    protected ItemInteractionResult useItemOn(ItemStack pStack, BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHitResult) {
+
+
+            //ADD WATER
+        if (pStack.is(Items.WATER_BUCKET) && pState.getValue(LEVEL) >= 0 && pState.getValue(LEVEL) < 3) {
+            if (!pLevel.isClientSide()) {
+                // Set LEVEL and SOUPTYPE
+                pLevel.setBlockAndUpdate(pPos, pState.setValue(LEVEL, 3).setValue(SOUPTYPE, SoupType.WATER));
+
+                // Switch the Water Bucket in player hand to Empty Bucket
+                ItemStack emptyBucket = new ItemStack(Items.BUCKET);
+                pPlayer.setItemInHand(pHand, net.minecraft.world.item.ItemUtils.createFilledResult(pStack, pPlayer, emptyBucket));
+
+                // Sound
+                pLevel.playSound(null, pPos, SoundEvents.BUCKET_EMPTY, SoundSource.BLOCKS, 1.0F, 1.0F);
+            }
+            // REMOVE WATER
+        } else if (pStack.is(Items.BUCKET) && pState.getValue(LEVEL) == 3) {
+            if (!pLevel.isClientSide()) {
+                // Reset LEVEL and SOUPTYPE
+                pLevel.setBlockAndUpdate(pPos, pState.setValue(LEVEL, 0).setValue(SOUPTYPE, SoupType.WATER));
+
+                // Switch the Empty Bucket in player hand to Water Bucket
+                ItemStack waterBucket = new ItemStack(Items.WATER_BUCKET);
+                pPlayer.setItemInHand(pHand, net.minecraft.world.item.ItemUtils.createFilledResult(pStack, pPlayer, waterBucket));
+
+                // Sound
+                pLevel.playSound(null, pPos, SoundEvents.BUCKET_FILL, SoundSource.BLOCKS, 1.0F, 1.0F);
+            }
+            // BOTTLE
+        }else if (pStack.is(Items.GLASS_BOTTLE) && pState.getValue(LEVEL) > 0 && pState.getValue(SOUPTYPE) == SoupType.WATER) {
+            if (!pLevel.isClientSide()) {
+                // Reset LEVEL and SOUPTYPE
+                pLevel.setBlockAndUpdate(pPos, pState.setValue(LEVEL, (pState.getValue(LEVEL) - 1)));
+
+                // Switch the Empty Bottle in player hand to Water Bottle
+                ItemStack waterBottle = net.minecraft.world.item.alchemy.PotionContents.createItemStack(Items.POTION, net.minecraft.world.item.alchemy.Potions.WATER);
+                pPlayer.setItemInHand(pHand, net.minecraft.world.item.ItemUtils.createFilledResult(pStack, pPlayer, waterBottle));
+
+                // Sound
+                pLevel.playSound(null, pPos, SoundEvents.BOTTLE_FILL, SoundSource.BLOCKS, 1.0F, 1.0F);
+            }
+            // STEW
+        }else if (pStack.is(Items.BOWL) && pState.getValue(LEVEL) > 0 && pState.getValue(SOUPTYPE) != SoupType.WATER) {
+            // Reset LEVEL and SOUPTYPE
+            pLevel.setBlockAndUpdate(pPos, pState.setValue(LEVEL, (pState.getValue(LEVEL) - 1)));
+
+            // Switch the Bowl in player hand to stew
+            ItemStack stew = new ItemStack(Items.MUSHROOM_STEW);
+            pPlayer.setItemInHand(pHand, net.minecraft.world.item.ItemUtils.createFilledResult(pStack, pPlayer, stew));
+
+            // Sound
+            pLevel.playSound(null, pPos, SoundEvents.FROG_EAT, SoundSource.BLOCKS, 2.0F, 1.0F);
+
+
+            // CARROT (TEMP)
+        }else if (pStack.is(Items.CARROT) &&  pState.getValue(LEVEL) > 0) {
+            pLevel.setBlockAndUpdate(pPos,pState.setValue(SOUPTYPE, SoupType.CARROT));
+
+
+            // ITEMS
+        }else if (pLevel.getBlockEntity(pPos) instanceof CauldronBlockEntity cauldronBlockEntity) {
+            if(pPlayer.isCrouching() && !pLevel.isClientSide){
+                ((ServerPlayer) pPlayer).openMenu(new SimpleMenuProvider(cauldronBlockEntity, Component.literal("Cauldron")), pPos);
+                return ItemInteractionResult.SUCCESS;
+            }
+
+            if(pPlayer.isCrouching() && pLevel.isClientSide()) {
+                return ItemInteractionResult.SUCCESS;
+            }
+
+            if(cauldronBlockEntity.inventory.getStackInSlot(0).isEmpty() && !pStack.isEmpty()) {
+                cauldronBlockEntity.inventory.insertItem(0, pStack.copy(), false);
+                pStack.shrink(1);
+                pLevel.playSound(pPlayer, pPos, SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS, 1f, 1f);
+            } else if(pStack.isEmpty()) {
+                ItemStack stackOnCauldron = cauldronBlockEntity.inventory.extractItem(0, 1, false);
+                pPlayer.setItemInHand(InteractionHand.MAIN_HAND, stackOnCauldron);
+                pLevel.playSound(pPlayer, pPos, SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS, 1f, 1f);
+            }
+        }
+
+
+        return ItemInteractionResult.SUCCESS;
+    }
+}
+

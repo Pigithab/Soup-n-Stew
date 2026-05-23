@@ -1,7 +1,17 @@
 package com.pigmyy.cookingmod;
 
 import com.mojang.logging.LogUtils;
+import com.pigmyy.cookingmod.block.ModBlocks;
+import com.pigmyy.cookingmod.block.custom.Cauldron;
+import com.pigmyy.cookingmod.block.entity.ModBlockEntities;
+import com.pigmyy.cookingmod.item.ModCreativeModeTabs;
+import com.pigmyy.cookingmod.item.ModItems;
+import com.pigmyy.cookingmod.screen.ModMenuTypes;
+import com.pigmyy.cookingmod.screen.custom.CauldronScreen;
+import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.RegisterColorHandlersEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.event.server.ServerStartingEvent;
@@ -29,6 +39,12 @@ public class CookingMod {
         MinecraftForge.EVENT_BUS.register(this);
 
 
+        ModCreativeModeTabs.register(modEventBus);
+        ModItems.register(modEventBus);
+        ModBlocks.register(modEventBus);
+        ModBlockEntities.register(modEventBus);
+        ModMenuTypes.register(modEventBus);
+
 
         // Register the item to a creative tab
         modEventBus.addListener(this::addCreative);
@@ -36,14 +52,29 @@ public class CookingMod {
         context.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
     }
 
+    
     private void commonSetup(final FMLCommonSetupEvent event)    {
 
     }
-
-    // Add the example block item to the building blocks tab
     private void addCreative(BuildCreativeModeTabContentsEvent event)    {
 
+        // Adds the ModItems to their respective Creative Categories
+        if(event.getTabKey() == CreativeModeTabs.FOOD_AND_DRINKS) {
+            // GH0STFISH
+            event.accept(ModItems.GH0STFISH);
+        }
+        if(event.getTabKey() == CreativeModeTabs.TOOLS_AND_UTILITIES) {
+            // ALEXPECTED
+            event.accept(ModItems.AlEXPECTED);
+        }
+        if(event.getTabKey() == CreativeModeTabs.BUILDING_BLOCKS) {
+            // IDK_BLOCK
+            event.accept(ModBlocks.IDK_BLOCK);
+            event.accept(ModBlocks.CAULDRON);
+        }
+
     }
+
 
     // You can use SubscribeEvent and let the Event Bus discover methods to call
     @SubscribeEvent
@@ -51,12 +82,28 @@ public class CookingMod {
 
     }
 
+
     // You can use EventBusSubscriber to automatically register all static methods in the class annotated with @SubscribeEvent
     @Mod.EventBusSubscriber(modid = MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
     public static class ClientModEvents    {
         @SubscribeEvent
-        public static void onClientSetup(FMLClientSetupEvent event)        {
+        public static void onClientSetup(FMLClientSetupEvent event) {
+            MenuScreens.register(ModMenuTypes.CAULDRON_MENU.get(), CauldronScreen::new);
+        }
+        @SubscribeEvent
+        public static void registerBlockColors(RegisterColorHandlersEvent.Block event) {
+            event.register(
+                    (state, level, pos, tintIndex) -> {
+                        var soup = state.getValue(Cauldron.SOUPTYPE);
 
+                        return switch (soup) {
+                            case WATER -> 0x3F76E4;
+                            case CARROT, POTATO -> 0xc78c65;
+                        };
+
+                    },
+                    ModBlocks.CAULDRON.get()
+            );
         }
     }
 }
