@@ -50,8 +50,9 @@ public class Cauldron extends BaseEntityBlock {
         super(pProperties);
         //DEFAULT STATES
 
+        // Cauldron Integers for Water Level and Soup Type
         this.registerDefaultState(this.stateDefinition.any()
-                // IS_FULL INTEGER
+                // LEVEL INTEGER
                 .setValue(LEVEL, 0)
                 // SOUP_TYPE ENUM
                 .setValue(SOUPTYPE, SoupType.WATER));
@@ -113,7 +114,7 @@ public class Cauldron extends BaseEntityBlock {
 
 
 
-    // INTERACT
+    // INTERACTION HANDLER
     @Override
     protected ItemInteractionResult useItemOn(ItemStack pStack, BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHitResult) {
 

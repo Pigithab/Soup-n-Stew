@@ -24,6 +24,7 @@ public class CauldronMenu extends AbstractContainerMenu {
         this(pContainerId, inv, inv.player.level().getBlockEntity(extraData.readBlockPos()), new SimpleContainerData(4));
     }
 
+    // creates all the slots for the gui
     public CauldronMenu(int pContainerId, Inventory inv, BlockEntity blockEntity, ContainerData data) {
         super(ModMenuTypes.CAULDRON_MENU.get(), pContainerId);
         this.blockEntity = ((CauldronBlockEntity) blockEntity);
@@ -42,6 +43,7 @@ public class CauldronMenu extends AbstractContainerMenu {
         return data.get(0) > 0;
     }
 
+
     public int getScaledProgressBar() {
         int progress = this.data.get(0);
         int maxProgress = this.data.get(1);
@@ -50,6 +52,17 @@ public class CauldronMenu extends AbstractContainerMenu {
         return maxProgress != 0 && progress != 0 ? progress * barPixelSize / maxProgress : 0;
     }
 
+    public int getScaledFuel() {
+        int fuel = this.data.get(2);
+        int maxFuel = this.data.get(3);
+        int fuelBarMaxPixelWidth = 21;
+        if (maxFuel == 0 || fuel == 0) return 0;
+        return fuel * fuelBarMaxPixelWidth / maxFuel;
+    }
+
+
+
+    // Impressive code for shift clicking
 
     // CREDIT GOES TO: diesieben07 | https://github.com/diesieben07/SevenCommons
     // must assign a slot number to each of the slots used by the GUI.
@@ -122,7 +135,7 @@ public class CauldronMenu extends AbstractContainerMenu {
             this.addSlot(new Slot(playerInventory, i, 8 + i * 18, 142));
         }
     }
-
+    // create the slots for the Cauldron in specific place on the GUI
     private void addIngredientSlots() {
         for (int i = 0; i < 4; ++i){
             if (i == 3) {this.addSlot(new SlotItemHandler(this.blockEntity.inventory, i, 45, 53)); }
