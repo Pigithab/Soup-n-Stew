@@ -119,8 +119,8 @@ public class Cauldron extends BaseEntityBlock {
     protected ItemInteractionResult useItemOn(ItemStack pStack, BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHitResult) {
 
 
-            //ADD WATER
-        if (pStack.is(Items.WATER_BUCKET) && pState.getValue(LEVEL) >= 0 && pState.getValue(LEVEL) < 3) {
+        //ADD WATER
+        if (pStack.is(Items.WATER_BUCKET) && (pState.getValue(LEVEL) < 3 || pState.getValue(SOUPTYPE) != SoupType.WATER)) {
             if (!pLevel.isClientSide()) {
                 // Set LEVEL and SOUPTYPE
                 pLevel.setBlockAndUpdate(pPos, pState.setValue(LEVEL, 3).setValue(SOUPTYPE, SoupType.WATER));
@@ -132,7 +132,7 @@ public class Cauldron extends BaseEntityBlock {
                 // Sound
                 pLevel.playSound(null, pPos, SoundEvents.BUCKET_EMPTY, SoundSource.BLOCKS, 1.0F, 1.0F);
             }
-            // REMOVE WATER
+        // REMOVE WATER
         } else if (pStack.is(Items.BUCKET) && pState.getValue(LEVEL) == 3) {
             if (!pLevel.isClientSide()) {
                 // Reset LEVEL and SOUPTYPE
@@ -145,7 +145,7 @@ public class Cauldron extends BaseEntityBlock {
                 // Sound
                 pLevel.playSound(null, pPos, SoundEvents.BUCKET_FILL, SoundSource.BLOCKS, 1.0F, 1.0F);
             }
-            // BOTTLE
+        // BOTTLE
         }else if (pStack.is(Items.GLASS_BOTTLE) && pState.getValue(LEVEL) > 0 && pState.getValue(SOUPTYPE) == SoupType.WATER) {
             if (!pLevel.isClientSide()) {
                 // Reset LEVEL and SOUPTYPE
@@ -158,7 +158,8 @@ public class Cauldron extends BaseEntityBlock {
                 // Sound
                 pLevel.playSound(null, pPos, SoundEvents.BOTTLE_FILL, SoundSource.BLOCKS, 1.0F, 1.0F);
             }
-            // STEW
+
+        // STEW
         }else if (pStack.is(Items.BOWL) && pState.getValue(LEVEL) > 0 && pState.getValue(SOUPTYPE) != SoupType.WATER) {
             // Reset LEVEL and SOUPTYPE
             pLevel.setBlockAndUpdate(pPos, pState.setValue(LEVEL, (pState.getValue(LEVEL) - 1)));
@@ -171,12 +172,7 @@ public class Cauldron extends BaseEntityBlock {
             pLevel.playSound(null, pPos, SoundEvents.FROG_EAT, SoundSource.BLOCKS, 2.0F, 1.0F);
 
 
-            // CARROT (TEMP)
-        }else if (pStack.is(Items.CARROT) &&  pState.getValue(LEVEL) > 0) {
-            pLevel.setBlockAndUpdate(pPos,pState.setValue(SOUPTYPE, SoupType.CARROT));
-
-
-            // OPEN MENU
+        // OPEN MENU
         }else if (pLevel.getBlockEntity(pPos) instanceof CauldronBlockEntity cauldronBlockEntity) {
             if((!pPlayer.isCrouching() && !pLevel.isClientSide) || (pPlayer.isCrouching() && !pLevel.isClientSide && pStack.isEmpty())){
                 ((ServerPlayer) pPlayer).openMenu(new SimpleMenuProvider(cauldronBlockEntity, Component.literal("Cauldron")), pPos);

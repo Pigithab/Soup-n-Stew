@@ -138,9 +138,24 @@ public class CauldronMenu extends AbstractContainerMenu {
     // create the slots for the Cauldron in specific place on the GUI
     private void addIngredientSlots() {
         for (int i = 0; i < 4; ++i){
-            if (i == 3) {this.addSlot(new SlotItemHandler(this.blockEntity.inventory, i, 45, 53)); }
+            if (i == 3) {
+                this.addSlot(new SlotItemHandler(this.blockEntity.inventory, i, 45, 53) {
+                    // ONLY ACCEPT FUEL
+                    @Override
+                    public boolean mayPlace(ItemStack stack) {
+                        return FurnaceFuelSlot.isBucket(stack) || net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity.isFuel(stack);
+                    }
+                });
+
+            }
             else {
-                this.addSlot(new SlotItemHandler(this.blockEntity.inventory, i, 45 + 35 * i, 19));
+                this.addSlot(new SlotItemHandler(this.blockEntity.inventory, i, 45 + 35 * i, 19) {
+                    // ONLY ACCEPT NON FUEL
+                    @Override
+                    public boolean mayPlace(ItemStack stack) {
+                        return !net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity.isFuel(stack);
+                    }
+                });
             }
         }
     }

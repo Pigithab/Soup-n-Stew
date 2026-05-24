@@ -40,6 +40,7 @@ public class CauldronBlockEntity extends BlockEntity implements MenuProvider {
     public final ItemStackHandler inventory = new ItemStackHandler(4) {
         @Override
         protected int getStackLimit(int slot, @NotNull ItemStack stack) {
+            if (slot == 3) {return stack.getMaxStackSize(); }
             return 1;
         }
 
@@ -64,7 +65,8 @@ public class CauldronBlockEntity extends BlockEntity implements MenuProvider {
     private int progress = 0;
     private int maxProgress = 400;
     private int fuelLeft = 0;
-    private int maxFuel = 4000;
+    private int maxFuel = 20000;
+    private int fuelTimer = 0;
 
 
     public CauldronBlockEntity(BlockPos pPos, BlockState pBlockState) {
@@ -133,6 +135,7 @@ public class CauldronBlockEntity extends BlockEntity implements MenuProvider {
         pTag.putInt("cauldron.max_progress", maxProgress);
         pTag.putInt("cauldron.fuel_left", fuelLeft);
         pTag.putInt("cauldron.max_fuel", maxFuel);
+        pTag.putInt("cauldron.fuel_timer", fuelTimer);
     }
     // LOAD
     @Override
@@ -143,6 +146,7 @@ public class CauldronBlockEntity extends BlockEntity implements MenuProvider {
         maxProgress = pTag.getInt("cauldron.max_progress");
         fuelLeft = pTag.getInt("cauldron.fuel_left");
         maxFuel = pTag.getInt("cauldron.max_fuel");
+        fuelTimer = pTag.getInt("cauldron.fuel_timer");
     }
 
 
@@ -183,9 +187,13 @@ public class CauldronBlockEntity extends BlockEntity implements MenuProvider {
 
 
         } else {
-            // if one of the requirements fails reset progress
-            resetProgress();
+            if(hasRecipe() && hasWater()) { decreaseCookingProgress(); } // Fuel is the problem then just start removing progress
+            else { resetProgress(); } // If Water or Recipe is the probelm then Start Over
         }
+    }
+
+    private void decreaseCookingProgress() {
+        if (progress > 0) { progress--; }
     }
 
     private boolean hasFuel() {
@@ -194,9 +202,12 @@ public class CauldronBlockEntity extends BlockEntity implements MenuProvider {
 
     private void addFuel() {
         int itemBurnDuration = net.minecraftforge.common.ForgeHooks.getBurnTime(inventory.getStackInSlot(FUEL_SLOT), RecipeType.SMELTING);
-        if (itemBurnDuration != 0 && itemBurnDuration + fuelLeft < maxFuel) {
+        // if the item can give fuel && its fuel can fit inside the maxFuel
+        if (fuelTimer > 0) { fuelTimer --; }
+        else if (itemBurnDuration != 0 && itemBurnDuration + fuelLeft < maxFuel) {
             fuelLeft += itemBurnDuration;
             inventory.extractItem(FUEL_SLOT, 1, false);
+            fuelTimer = 20;
         }
         return;
     }
