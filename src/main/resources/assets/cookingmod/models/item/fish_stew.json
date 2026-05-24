@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "cookingmod:item/pork_soup"
+    "layer0": "cookingmod:item/fish_stew"
   }
 }

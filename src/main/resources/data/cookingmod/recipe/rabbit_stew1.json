@@ -1,0 +1,16 @@
+{
+  "type": "cookingmod:cauldron",
+  "ingredient1": {
+    "item": "minecraft:potato"
+  },
+  "ingredient2": {
+    "item": "minecraft:brown_mushroom"
+  },
+  "ingredient3": {
+    "item": "minecraft:rabbit"
+  },
+  "result": {
+    "count": 1,
+    "id": "minecraft:rabbit_stew"
+  }
+}

@@ -194,7 +194,7 @@ public class CauldronBlockEntity extends BlockEntity implements MenuProvider {
             setChanged(level, blockPos, blockState);
             // when cooking is finished actually do the cooking and reset progress
             if(hasCookingFinished()) {
-                cookSoup();
+                cookStew();
                 resetProgress();
             }
 
@@ -235,7 +235,7 @@ public class CauldronBlockEntity extends BlockEntity implements MenuProvider {
         maxProgress = 400;
     }
 
-    private void cookSoup() {
+    private void cookStew() {
         Optional<RecipeHolder<CauldronRecipe>> recipe = getCurrentRecipe();
         ItemStack output = recipe.get().value().output();
 
@@ -260,7 +260,6 @@ public class CauldronBlockEntity extends BlockEntity implements MenuProvider {
         if (recipe.isEmpty()) {
             return false;
         }
-        System.out.print("ITEMITEMIMTE");
         return true;
     }
 

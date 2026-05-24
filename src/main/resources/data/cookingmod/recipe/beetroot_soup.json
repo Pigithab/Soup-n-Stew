@@ -1,0 +1,16 @@
+{
+  "type": "cookingmod:cauldron",
+  "ingredient1": {
+    "item": "minecraft:beetroot"
+  },
+  "ingredient2": {
+    "item": "minecraft:beetroot"
+  },
+  "ingredient3": {
+    "item": "minecraft:beetroot"
+  },
+  "result": {
+    "count": 1,
+    "id": "minecraft:beetroot_soup"
+  }
+}

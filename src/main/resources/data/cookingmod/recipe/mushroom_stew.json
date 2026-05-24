@@ -1,13 +1,13 @@
 {
   "type": "cookingmod:cauldron",
   "ingredient1": {
-    "item": "minecraft:potato"
+    "item": "minecraft:brown_mushroom"
   },
   "ingredient2": {
-    "item": "minecraft:salmon"
+    "item": "minecraft:red_mushroom"
   },
   "result": {
     "count": 1,
-    "id": "cookingmod:fish_soup"
+    "id": "minecraft:mushroom_stew"
   }
 }

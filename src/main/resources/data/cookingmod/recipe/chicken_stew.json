@@ -4,10 +4,13 @@
     "item": "minecraft:potato"
   },
   "ingredient2": {
-    "item": "minecraft:cod"
+    "item": "minecraft:carrot"
+  },
+  "ingredient3": {
+    "item": "minecraft:chicken"
   },
   "result": {
     "count": 1,
-    "id": "cookingmod:fish_soup"
+    "id": "cookingmod:chicken_stew"
   }
 }

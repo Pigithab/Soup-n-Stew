@@ -1,13 +1,13 @@
 {
   "type": "cookingmod:cauldron",
   "ingredient1": {
-    "item": "minecraft:carrot"
+    "item": "minecraft:potato"
   },
   "ingredient2": {
-    "item": "minecraft:porkchop"
+    "item": "minecraft:salmon"
   },
   "result": {
     "count": 1,
-    "id": "minecraft:pork_stew"
+    "id": "cookingmod:fish_stew"
   }
 }

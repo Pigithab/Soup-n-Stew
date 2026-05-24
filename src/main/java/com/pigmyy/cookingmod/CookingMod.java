@@ -63,13 +63,13 @@ public class CookingMod {
 
         // Adds the ModItems to their respective Creative Categories
         if(event.getTabKey() == CreativeModeTabs.FOOD_AND_DRINKS) {
-            event.accept(ModItems.FISH_SOUP);
-            event.accept(ModItems.VEGETABLE_SOUP);
-            event.accept(ModItems.ROTTEN_SOUP);
+            event.accept(ModItems.FISH_STEW);
+            event.accept(ModItems.VEGETABLE_STEW);
+            event.accept(ModItems.ROTTEN_STEW);
             event.accept(ModItems.PUMPKIN_SOUP);
-            event.accept(ModItems.PORK_SOUP);
-            event.accept(ModItems.BEEF_SOUP);
-            event.accept(ModItems.CHICKEN_SOUP);
+            event.accept(ModItems.PORK_STEW);
+            event.accept(ModItems.BEEF_STEW);
+            event.accept(ModItems.CHICKEN_STEW);
             event.accept(ModBlocks.CAULDRON);
         }
 

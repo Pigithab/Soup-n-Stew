@@ -1,13 +1,13 @@
 {
-  "item.cookingmod.fish_soup": "Fish Soup",
-  "item.cookingmod.vegetable_soup": "Vegetable Soup",
-  "item.cookingmod.rotten_soup": "Rotten Soup",
+  "item.cookingmod.fish_stew": "Fish Stew",
+  "item.cookingmod.vegetable_stew": "Vegetable Stew",
+  "item.cookingmod.rotten_stew": "Rotten Stew",
   "item.cookingmod.pumpkin_soup": "Pumpkin Soup",
-  "item.cookingmod.pork_soup": "Pork Soup",
-  "item.cookingmod.beef_soup": "Beef Soup",
-  "item.cookingmod.chicken_soup": "Chicken Soup",
+  "item.cookingmod.pork_stew": "Pork Stew",
+  "item.cookingmod.beef_stew": "Beef Stew",
+  "item.cookingmod.chicken_stew": "Chicken Stew",
 
   "block.cookingmod.cauldron": "Cooking Cauldron",
 
-  "creativetab.cookingmod.cooking_items": "Soup & Stuff"
+  "creativetab.cookingmod.cooking_items": "Stew & Stuff"
 }
