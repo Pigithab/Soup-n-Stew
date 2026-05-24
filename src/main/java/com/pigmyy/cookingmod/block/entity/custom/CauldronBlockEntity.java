@@ -238,12 +238,23 @@ public class CauldronBlockEntity extends BlockEntity implements MenuProvider {
     private void cookStew() {
         Optional<RecipeHolder<CauldronRecipe>> recipe = getCurrentRecipe();
         ItemStack output = recipe.get().value().output();
-
+        SoupType soup = SoupType.WATER;
+        // I AM SORRY YOU CANT MAKE A SWITCH IT ONLY ACCEPTS PRIMITIVES
+        if (output.is(Items.MUSHROOM_STEW)) { soup = SoupType.MUSHROOM; }
+        else if (output.is(Items.RABBIT_STEW)) { soup = SoupType.RABBIT; }
+        else if (output.is(Items.BEETROOT_SOUP)) { soup = SoupType.BEETROOT; }
+        else if (output.is(ModItems.FISH_STEW.get())) { soup = SoupType.FISH; }
+        else if (output.is(ModItems.BEEF_STEW.get())) { soup = SoupType.BEEF; }
+        else if (output.is(ModItems.PORK_STEW.get())) { soup = SoupType.PORK; }
+        else if (output.is(ModItems.ROTTEN_STEW.get())) { soup = SoupType.ROTTEN; }
+        else if (output.is(ModItems.PUMPKIN_SOUP.get())) { soup = SoupType.PUMPKIN; }
+        else if (output.is(ModItems.CHICKEN_STEW.get())) { soup = SoupType.CHICKEN; }
+        else if (output.is(ModItems.VEGETABLE_STEW.get())) { soup = SoupType.VEGETABLE; }
+        // REMOVE ITEMS FROM SLOTS
         inventory.extractItem(INPUT_SLOT1, 1, false);
         inventory.extractItem(INPUT_SLOT2, 1, false);
         inventory.extractItem(INPUT_SLOT3, 1, false);
-        inventory.setStackInSlot(FUEL_SLOT, new ItemStack(output.getItem(), inventory.getStackInSlot(FUEL_SLOT).getCount() + output.getCount()));
-//        com.pigmyy.cookingmod.block.custom.Cauldron.changeSoupState(this.level, this.worldPosition, SoupType.CARROT);
+        com.pigmyy.cookingmod.block.custom.Cauldron.changeSoupState(this.level, this.worldPosition, soup);
     }
 
     private boolean hasCookingFinished() {

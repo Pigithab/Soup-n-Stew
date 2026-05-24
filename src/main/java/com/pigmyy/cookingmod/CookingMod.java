@@ -101,9 +101,20 @@ public class CookingMod {
                         var soup = state.getValue(Cauldron.SOUPTYPE);
 
                         return switch (soup) {
-                            case WATER -> 0x3F76E4;
-                            case CARROT, POTATO -> 0xc78c65;
+                            case WATER      -> 0x3F76E4;
+                            case MUSHROOM   -> 0xC78C65;
+                            case RABBIT     -> 0x9D724C;
+                            case BEETROOT   -> 0x8C1616;
+                            case FISH       -> 0xBCC2BA;
+                            case PORK       -> 0xD1A396;
+                            case BEEF       -> 0x704A33;
+                            case ROTTEN     -> 0x4D5E35;
+                            case CHICKEN    -> 0xD3CCAA;
+                            case PUMPKIN    -> 0xD16A19;
+                            case VEGETABLE  -> 0xBC5843;
                         };
+
+
 
                     },
                     ModBlocks.CAULDRON.get()

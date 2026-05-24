@@ -3,6 +3,7 @@ package com.pigmyy.cookingmod.block.custom;
 import com.mojang.serialization.MapCodec;
 import com.pigmyy.cookingmod.block.entity.ModBlockEntities;
 import com.pigmyy.cookingmod.block.entity.custom.CauldronBlockEntity;
+import com.pigmyy.cookingmod.item.ModItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -31,6 +32,7 @@ import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.apache.commons.lang3.ObjectUtils;
 import org.jetbrains.annotations.Nullable;
 
 
@@ -164,9 +166,22 @@ public class Cauldron extends BaseEntityBlock {
             // Reset LEVEL and SOUPTYPE
             pLevel.setBlockAndUpdate(pPos, pState.setValue(LEVEL, (pState.getValue(LEVEL) - 1)));
 
-            // Switch the Bowl in player hand to stew
-            ItemStack stew = new ItemStack(Items.MUSHROOM_STEW);
+            // Switch the Bowl in player hand to stew according the Cauldrons Stew Type
+            ItemStack stew = switch (pState.getValue(SOUPTYPE)) {
+                case MUSHROOM  -> new ItemStack(Items.MUSHROOM_STEW);
+                case RABBIT    -> new ItemStack(Items.RABBIT_STEW);
+                case BEETROOT  -> new ItemStack(Items.BEETROOT_SOUP);
+                case FISH      -> new ItemStack(ModItems.FISH_STEW.get());
+                case PORK      -> new ItemStack(ModItems.PORK_STEW.get());
+                case BEEF      -> new ItemStack(ModItems.BEEF_STEW.get());
+                case ROTTEN    -> new ItemStack(ModItems.ROTTEN_STEW.get());
+                case CHICKEN   -> new ItemStack(ModItems.CHICKEN_STEW.get());
+                case PUMPKIN   -> new ItemStack(ModItems.PUMPKIN_SOUP.get());
+                case VEGETABLE -> new ItemStack(ModItems.VEGETABLE_STEW.get());
+                default -> new ItemStack(Items.BOWL);
+            };
             pPlayer.setItemInHand(pHand, net.minecraft.world.item.ItemUtils.createFilledResult(pStack, pPlayer, stew));
+
 
             // Sound
             pLevel.playSound(null, pPos, SoundEvents.FROG_EAT, SoundSource.BLOCKS, 2.0F, 1.0F);
