@@ -6,6 +6,7 @@ import com.pigmyy.cookingmod.block.custom.Cauldron;
 import com.pigmyy.cookingmod.block.entity.ModBlockEntities;
 import com.pigmyy.cookingmod.item.ModCreativeModeTabs;
 import com.pigmyy.cookingmod.item.ModItems;
+import com.pigmyy.cookingmod.recipe.ModRecipes;
 import com.pigmyy.cookingmod.screen.ModMenuTypes;
 import com.pigmyy.cookingmod.screen.custom.CauldronScreen;
 import net.minecraft.client.gui.screens.MenuScreens;
@@ -43,7 +44,9 @@ public class CookingMod {
         ModItems.register(modEventBus);
         ModBlocks.register(modEventBus);
         ModBlockEntities.register(modEventBus);
+
         ModMenuTypes.register(modEventBus);
+        ModRecipes.register(modEventBus);
 
 
         // Register the item to a creative tab

@@ -1,0 +1,16 @@
+{
+  "type": "cookingmod:cauldron",
+  "ingredient1": {
+    "item": "minecraft:carrot"
+  },
+  "ingredient2": {
+    "item": "minecraft:potato"
+  },
+  "ingredient3": {
+    "item": "minecraft:beetroot"
+  },
+  "result": {
+    "count": 1,
+    "id": "cookingmod:vegetable_soup"
+  }
+}

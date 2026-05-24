@@ -4,8 +4,12 @@ import com.pigmyy.cookingmod.block.custom.Cauldron;
 import com.pigmyy.cookingmod.block.custom.SoupType;
 import com.pigmyy.cookingmod.block.entity.ModBlockEntities;
 import com.pigmyy.cookingmod.item.ModItems;
+import com.pigmyy.cookingmod.recipe.CauldronRecipe;
+import com.pigmyy.cookingmod.recipe.CauldronRecipeInput;
+import com.pigmyy.cookingmod.recipe.ModRecipes;
 import com.pigmyy.cookingmod.screen.custom.CauldronMenu;
 import com.pigmyy.cookingmod.screen.custom.CauldronScreen;
+import net.minecraft.Optionull;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -23,6 +27,8 @@ import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -30,9 +36,14 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import javax.swing.text.html.Option;
+import java.util.List;
+import java.util.Optional;
 
 public class CauldronBlockEntity extends BlockEntity implements MenuProvider {
 
@@ -52,6 +63,8 @@ public class CauldronBlockEntity extends BlockEntity implements MenuProvider {
             }
         }
     };
+
+
     // initialize variables
     private static final int INPUT_SLOT1 = 0;
     private static final int INPUT_SLOT2 = 1;
@@ -223,8 +236,14 @@ public class CauldronBlockEntity extends BlockEntity implements MenuProvider {
     }
 
     private void cookSoup() {
+        Optional<RecipeHolder<CauldronRecipe>> recipe = getCurrentRecipe();
+        ItemStack output = recipe.get().value().output();
+
         inventory.extractItem(INPUT_SLOT1, 1, false);
-        com.pigmyy.cookingmod.block.custom.Cauldron.changeSoupState(this.level, this.worldPosition, SoupType.CARROT);
+        inventory.extractItem(INPUT_SLOT2, 1, false);
+        inventory.extractItem(INPUT_SLOT3, 1, false);
+        inventory.setStackInSlot(FUEL_SLOT, new ItemStack(output.getItem(), inventory.getStackInSlot(FUEL_SLOT).getCount() + output.getCount()));
+//        com.pigmyy.cookingmod.block.custom.Cauldron.changeSoupState(this.level, this.worldPosition, SoupType.CARROT);
     }
 
     private boolean hasCookingFinished() {
@@ -237,8 +256,22 @@ public class CauldronBlockEntity extends BlockEntity implements MenuProvider {
     }
 
     private boolean hasRecipe() {
-        Item input = Items.CARROT;
+        Optional<RecipeHolder<CauldronRecipe>> recipe = getCurrentRecipe();
+        if (recipe.isEmpty()) {
+            return false;
+        }
+        System.out.print("ITEMITEMIMTE");
+        return true;
+    }
 
-        return inventory.getStackInSlot(INPUT_SLOT1).is(input) || inventory.getStackInSlot(INPUT_SLOT2).is(input) || inventory.getStackInSlot(INPUT_SLOT3).is(input);
+    private Optional<RecipeHolder<CauldronRecipe>> getCurrentRecipe() {
+        List<ItemStack> itemStacks = List.of(
+                inventory.getStackInSlot(0),
+                inventory.getStackInSlot(1),
+                inventory.getStackInSlot(2)
+        );
+        return this.level.getRecipeManager()
+                .getRecipeFor(ModRecipes.CAULDRON_TYPE.get(), new CauldronRecipeInput(itemStacks), this.level);
+
     }
 }

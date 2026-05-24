@@ -1,0 +1,16 @@
+{
+  "type": "cookingmod:cauldron",
+  "ingredient1": {
+    "item": "minecraft:rotten_flesh"
+  },
+  "ingredient2": {
+    "item": "minecraft:rotten_flesh"
+  },
+  "ingredient3": {
+    "item": "minecraft:rotten_flesh"
+  },
+  "result": {
+    "count": 1,
+    "id": "cookingmod:rotten_soup"
+  }
+}

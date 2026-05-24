@@ -1,0 +1,16 @@
+{
+  "type": "cookingmod:cauldron",
+  "ingredient1": {
+    "item": "minecraft:pumpkin"
+  },
+  "ingredient2": {
+    "item": "minecraft:sugar"
+  },
+  "ingredient3": {
+    "item": "minecraft:honey_bottle"
+  },
+  "result": {
+    "count": 1,
+    "id": "cookingmod:pumpkin_soup"
+  }
+}
