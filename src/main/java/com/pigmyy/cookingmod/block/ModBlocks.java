@@ -20,9 +20,6 @@ public class ModBlocks {
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, CookingMod.MOD_ID);
 
 
-    // register "IDK_BLOCK"
-    public static final RegistryObject<Block> IDK_BLOCK = registerBlock("idk_block", () ->
-            new Block(BlockBehaviour.Properties.of().strength(3f).requiresCorrectToolForDrops().sound(SoundType.CALCITE)));
     // register Cauldron
     public static final RegistryObject<Block> CAULDRON = registerBlock("cauldron", () ->
             new Cauldron(BlockBehaviour.Properties.ofFullCopy(net.minecraft.world.level.block.Blocks.CAULDRON).noOcclusion()));

@@ -10,11 +10,21 @@ import net.minecraftforge.registries.RegistryObject;
 public class ModItems {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, CookingMod.MOD_ID);
 
-    // registering individual items
-    public static final RegistryObject<Item> GH0STFISH = ITEMS.register("gh0stfish", () -> new Item(new Item.Properties()));
 
-    public static final RegistryObject<Item> AlEXPECTED = ITEMS.register("alexpected", () -> new Item(new Item.Properties()));
-    
+    public static final RegistryObject<Item> FISH_SOUP = ITEMS.register("fish_soup", () -> new Item(new Item.Properties()));
+
+    public static final RegistryObject<Item> VEGETABLE_SOUP = ITEMS.register("vegetable_soup", () -> new Item(new Item.Properties()));
+
+    public static final RegistryObject<Item> ROTTEN_SOUP = ITEMS.register("rotten_soup", () -> new Item(new Item.Properties()));
+
+    public static final RegistryObject<Item> PUMPKIN_SOUP = ITEMS.register("pumpkin_soup", () -> new Item(new Item.Properties()));
+
+    public static final RegistryObject<Item> PORK_SOUP = ITEMS.register("pork_soup", () -> new Item(new Item.Properties()));
+
+    public static final RegistryObject<Item> BEEF_SOUP = ITEMS.register("beef_soup", () -> new Item(new Item.Properties()));
+
+    public static final RegistryObject<Item> CHICKEN_SOUP = ITEMS.register("chicken_soup", () -> new Item(new Item.Properties()));
+
 
 
     public static void register(IEventBus eventBus) {

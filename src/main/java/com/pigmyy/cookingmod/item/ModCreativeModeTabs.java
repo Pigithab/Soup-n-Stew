@@ -18,14 +18,21 @@ public class ModCreativeModeTabs {
 
     // Creative Tab for all Cooking Related Items
     public static final RegistryObject<CreativeModeTab> COOKING_ITEMS_TAB = CREATIVE_MODE_TABS.register("cooking_items_tab", () ->
-            CreativeModeTab.builder().icon(() -> new ItemStack(ModItems.GH0STFISH.get()))
+            CreativeModeTab.builder().icon(() -> new ItemStack(ModBlocks.CAULDRON.get()))
                     .title(Component.translatable("creativetab.cookingmod.cooking_items"))
                     .displayItems((itemDisplayParameters, output) -> {
                         // items in the tab
-                        output.accept(ModItems.GH0STFISH.get());
-                        output.accept(ModItems.AlEXPECTED.get());
+
+                        output.accept(ModItems.FISH_SOUP.get());
+                        output.accept(ModItems.FISH_SOUP.get());
+                        output.accept(ModItems.VEGETABLE_SOUP.get());
+                        output.accept(ModItems.ROTTEN_SOUP.get());
+                        output.accept(ModItems.PUMPKIN_SOUP.get());
+                        output.accept(ModItems.PORK_SOUP.get());
+                        output.accept(ModItems.BEEF_SOUP.get());
+                        output.accept(ModItems.CHICKEN_SOUP.get());
+
                         output.accept(ModBlocks.CAULDRON.get());
-                        output.accept(ModBlocks.IDK_BLOCK.get());
                     }).build());
 
 

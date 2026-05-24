@@ -60,16 +60,17 @@ public class CookingMod {
 
         // Adds the ModItems to their respective Creative Categories
         if(event.getTabKey() == CreativeModeTabs.FOOD_AND_DRINKS) {
-            // GH0STFISH
-            event.accept(ModItems.GH0STFISH);
+            event.accept(ModItems.FISH_SOUP);
+            event.accept(ModItems.VEGETABLE_SOUP);
+            event.accept(ModItems.ROTTEN_SOUP);
+            event.accept(ModItems.PUMPKIN_SOUP);
+            event.accept(ModItems.PORK_SOUP);
+            event.accept(ModItems.BEEF_SOUP);
+            event.accept(ModItems.CHICKEN_SOUP);
+            event.accept(ModBlocks.CAULDRON);
         }
-        if(event.getTabKey() == CreativeModeTabs.TOOLS_AND_UTILITIES) {
-            // ALEXPECTED
-            event.accept(ModItems.AlEXPECTED);
-        }
+
         if(event.getTabKey() == CreativeModeTabs.BUILDING_BLOCKS) {
-            // IDK_BLOCK
-            event.accept(ModBlocks.IDK_BLOCK);
             event.accept(ModBlocks.CAULDRON);
         }
 
