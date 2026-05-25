@@ -110,7 +110,7 @@ public class CookingMod {
                             case BEEF       -> 0x704A33;
                             case ROTTEN     -> 0x4D5E35;
                             case CHICKEN    -> 0xD3CCAA;
-                            case PUMPKIN    -> 0xD16A19;
+                            case PUMPKIN    -> 0xd58215;
                             case VEGETABLE  -> 0xBC5843;
                         };
 
