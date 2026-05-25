@@ -366,7 +366,4 @@ public class CauldronBlockEntity extends BlockEntity implements MenuProvider {
             }
         }
     }
-
-
-
 }

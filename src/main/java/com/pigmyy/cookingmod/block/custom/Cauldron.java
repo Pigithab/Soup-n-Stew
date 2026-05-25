@@ -119,8 +119,16 @@ public class Cauldron extends BaseEntityBlock {
         pLevel.setBlockAndUpdate(pPos, pState.setValue(SOUPTYPE, type));
     }
 
-
-
+    // burns players but isnt synced with cooking yet ( needs to be in CauldronBlockEntitiy.java to trigger only when cooking )
+    @Override
+    public void entityInside(BlockState pState, Level pLevel, BlockPos pPos, net.minecraft.world.entity.Entity pEntity) {
+        if (pState.getValue(LEVEL) > 0) {
+            if (pEntity instanceof net.minecraft.world.entity.LivingEntity livingEntity) {
+                livingEntity.hurt(pLevel.damageSources().hotFloor(), 1.0F);
+            }
+        }
+        super.entityInside(pState, pLevel, pPos, pEntity);
+    }
 
 
     // INTERACTION HANDLER
