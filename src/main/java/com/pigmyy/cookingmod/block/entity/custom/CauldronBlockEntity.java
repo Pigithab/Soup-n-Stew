@@ -12,12 +12,16 @@ import com.pigmyy.cookingmod.screen.custom.CauldronScreen;
 import net.minecraft.Optionull;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.Containers;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.SimpleContainer;
@@ -45,6 +49,8 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
+
+import static com.pigmyy.cookingmod.block.custom.Cauldron.LEVEL;
 
 public class CauldronBlockEntity extends BlockEntity implements MenuProvider {
 
@@ -200,6 +206,7 @@ public class CauldronBlockEntity extends BlockEntity implements MenuProvider {
         addFuel();
         if(hasRecipe() && hasWater() && hasFuel() && sameRecipe) { // Check if Recipe is Correct and if the Cauldron has water and fuel
             increaseCookingProgress(); // Increases CookingProgress by 1
+            playAnimation();
             setChanged(level, blockPos, blockState);
 
             // when cooking is finished actually do the cooking and reset progress
@@ -259,7 +266,7 @@ public class CauldronBlockEntity extends BlockEntity implements MenuProvider {
 
     private boolean hasWater() {
         BlockState state = this.level.getBlockState(this.worldPosition);
-        return (state.getValue(Cauldron.LEVEL) > 0 && state.getValue(Cauldron.SOUPTYPE) == SoupType.WATER);
+        return (state.getValue(LEVEL) > 0 && state.getValue(Cauldron.SOUPTYPE) == SoupType.WATER);
     }
 
     private void resetProgress() {
@@ -317,4 +324,49 @@ public class CauldronBlockEntity extends BlockEntity implements MenuProvider {
                 .getRecipeFor(ModRecipes.CAULDRON_TYPE.get(), new CauldronRecipeInput(itemStacks), this.level);
 
     }
+
+    private void playAnimation() {
+
+        RandomSource pRandom = this.level.getRandom();
+        // Campfire sound ( same logic as the campfire )
+        this.level.playSound(null, this.worldPosition,
+                SoundEvents.CAMPFIRE_CRACKLE,
+                SoundSource.BLOCKS,
+                0.2F + pRandom.nextFloat(),
+                pRandom.nextFloat() * 0.7F + 0.6F);
+
+        if (this.level instanceof net.minecraft.server.level.ServerLevel serverLevel) {
+            // Water splash particles
+            serverLevel.sendParticles(
+                    ParticleTypes.SPLASH,
+                    (double)this.worldPosition.getX() + 0.5,
+                    (double)this.worldPosition.getY() + 0.15 + (this.getBlockState().getValue(LEVEL) * 0.25D),
+                    (double)this.worldPosition.getZ() + 0.5,
+                    0,
+                    0.0D,
+                    0.1D,
+                    0.0D,
+                    9.0D
+            );
+
+            // 1 in 3 Chance to trigger smoke
+            if (pRandom.nextInt() % 3 == 0) {
+                // Campfire's normal logic
+                serverLevel.sendParticles(
+                        ParticleTypes.CAMPFIRE_SIGNAL_SMOKE,
+                        (double)this.worldPosition.getX() + 0.5 + pRandom.nextDouble() / 3.0 * (double)(pRandom.nextBoolean() ? 1 : -1),
+                        (double)this.worldPosition.getY() + 0.15 + (this.getBlockState().getValue(LEVEL) * 0.25D) + pRandom.nextDouble(),
+                        (double)this.worldPosition.getZ() + 0.5 + pRandom.nextDouble() / 3.0 * (double)(pRandom.nextBoolean() ? 1 : -1),
+                        0,
+                        0.0D,
+                        0.05D,
+                        0.0D,
+                        1.0D
+                );
+            }
+        }
+    }
+
+
+
 }
