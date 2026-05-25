@@ -27,8 +27,6 @@ public record CauldronRecipe(Ingredient inputItem1, Optional<Ingredient> inputIt
         return list;
     }
 
-    // read in JSON File --> turns into new CauldronRecipe
-
     @Override
     public boolean matches(CauldronRecipeInput pInput, Level pLevel) {
 

@@ -10,7 +10,7 @@ import net.minecraftforge.registries.RegistryObject;
 public class ModItems {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, CookingMod.MOD_ID);
 
-    // Register every item ( and add them to .food() since its a food mod)
+    // Register soup/stew items and give them food properties
     public static final RegistryObject<Item> FISH_STEW = ITEMS.register("fish_stew", () -> new Item(new Item.Properties().food(ModFoodProperties.FISH_STEW)));
 
     public static final RegistryObject<Item> VEGETABLE_STEW = ITEMS.register("vegetable_stew", () -> new Item(new Item.Properties().food(ModFoodProperties.VEGETABLE_STEW)));

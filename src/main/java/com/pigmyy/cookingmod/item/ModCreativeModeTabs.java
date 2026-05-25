@@ -1,3 +1,4 @@
+
 package com.pigmyy.cookingmod.item;
 
 import com.pigmyy.cookingmod.CookingMod;
@@ -15,21 +16,19 @@ public class ModCreativeModeTabs {
             DeferredRegister.create(Registries.CREATIVE_MODE_TAB, CookingMod.MOD_ID);
 
 
-    // Creative Tab for all Cooking Related Items
+    // Custom Creative Tab for all Mod Related Items
     public static final RegistryObject<CreativeModeTab> COOKING_ITEMS_TAB = CREATIVE_MODE_TABS.register("cooking_items_tab", () ->
             CreativeModeTab.builder().icon(() -> new ItemStack(ModBlocks.CAULDRON.get()))
                     .title(Component.translatable("creativetab.cookingmod.cooking_items"))
                     .displayItems((itemDisplayParameters, output) -> {
                         // items in the tab
-
                         output.accept(ModItems.FISH_STEW.get());
-                        output.accept(ModItems.FISH_STEW.get());
-                        output.accept(ModItems.VEGETABLE_STEW.get());
-                        output.accept(ModItems.ROTTEN_STEW.get());
-                        output.accept(ModItems.PUMPKIN_SOUP.get());
                         output.accept(ModItems.PORK_STEW.get());
                         output.accept(ModItems.BEEF_STEW.get());
+                        output.accept(ModItems.ROTTEN_STEW.get());
                         output.accept(ModItems.CHICKEN_STEW.get());
+                        output.accept(ModItems.PUMPKIN_SOUP.get());
+                        output.accept(ModItems.VEGETABLE_STEW.get());
 
                         output.accept(ModBlocks.CAULDRON.get());
                     }).build());

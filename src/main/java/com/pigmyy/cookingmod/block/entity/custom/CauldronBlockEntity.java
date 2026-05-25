@@ -12,6 +12,7 @@ import com.pigmyy.cookingmod.screen.custom.CauldronScreen;
 import net.minecraft.Optionull;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
@@ -80,6 +81,7 @@ public class CauldronBlockEntity extends BlockEntity implements MenuProvider {
     private int fuelLeft = 0;
     private int maxFuel = 20000;
     private int fuelTimer = 0;
+    private String cookingRecipe = "";
 
 
     public CauldronBlockEntity(BlockPos pPos, BlockState pBlockState) {
@@ -149,6 +151,7 @@ public class CauldronBlockEntity extends BlockEntity implements MenuProvider {
         pTag.putInt("cauldron.fuel_left", fuelLeft);
         pTag.putInt("cauldron.max_fuel", maxFuel);
         pTag.putInt("cauldron.fuel_timer", fuelTimer);
+        pTag.putString("cauldron.cookingRecipe", cookingRecipe);
     }
     // LOAD
     @Override
@@ -160,6 +163,7 @@ public class CauldronBlockEntity extends BlockEntity implements MenuProvider {
         fuelLeft = pTag.getInt("cauldron.fuel_left");
         maxFuel = pTag.getInt("cauldron.max_fuel");
         fuelTimer = pTag.getInt("cauldron.fuel_timer");
+        cookingRecipe = pTag.getString("cauldron.cookingRecipe");
     }
 
 
@@ -186,12 +190,18 @@ public class CauldronBlockEntity extends BlockEntity implements MenuProvider {
     public AbstractContainerMenu createMenu(int pContainerId, Inventory pPlayerInventory, Player pPlayer) {
         return new CauldronMenu(pContainerId, pPlayerInventory, this, this.data);
     }
-        // EVERY TICK EXECUTE FOLLOWING CODE
+
+
+        // EVERY TICK EXECUTE FOLLOWING CODE ( COOKING PROCESS )
+
+
     public void tick(Level level, BlockPos blockPos, BlockState blockState) {
+        boolean sameRecipe = sameRecipe();
         addFuel();
-        if(hasRecipe() && hasWater() && hasFuel()) { // Check if Recipe is Correct and if the Cauldron has water
+        if(hasRecipe() && hasWater() && hasFuel() && sameRecipe) { // Check if Recipe is Correct and if the Cauldron has water and fuel
             increaseCookingProgress(); // Increases CookingProgress by 1
             setChanged(level, blockPos, blockState);
+
             // when cooking is finished actually do the cooking and reset progress
             if(hasCookingFinished()) {
                 cookStew();
@@ -200,10 +210,32 @@ public class CauldronBlockEntity extends BlockEntity implements MenuProvider {
 
 
         } else {
-            if(hasRecipe() && hasWater()) { decreaseCookingProgress(); } // Fuel is the problem then just start removing progress
-            else { resetProgress(); } // If Water or Recipe is the probelm then Start Over
+            if(hasRecipe() && hasWater() && sameRecipe) { decreaseCookingProgress(); } // Fuel is the problem then just start removing progress
+            else { resetProgress(); } // If Water or Recipe is the problem then start over
         }
     }
+
+
+    // END OF COOKING PROCESS
+
+
+
+    private boolean sameRecipe() {
+        Optional<RecipeHolder<CauldronRecipe>> recipe = getCurrentRecipe();
+        if (recipe.isPresent()) {
+            Item currentItem = recipe.get().value().output().getItem();
+            String currentRecipe = BuiltInRegistries.ITEM.getKey(currentItem).toString();
+
+            if (!cookingRecipe.equals(currentRecipe)) {
+                cookingRecipe = currentRecipe;
+                // reset progress here because it triggers decreaseCookingProgress since its changed before the second check
+                resetProgress();
+                return false;
+            }
+        }
+        return true;
+    }
+
 
     private void decreaseCookingProgress() {
         if (progress > 0) { progress--; }
@@ -231,6 +263,7 @@ public class CauldronBlockEntity extends BlockEntity implements MenuProvider {
     }
 
     private void resetProgress() {
+        // max progress reset just in case some recipes take longer ( not a feature yet )
         this.progress = 0;
         maxProgress = 400;
     }
@@ -250,7 +283,7 @@ public class CauldronBlockEntity extends BlockEntity implements MenuProvider {
         else if (output.is(ModItems.PUMPKIN_SOUP.get())) { soup = SoupType.PUMPKIN; }
         else if (output.is(ModItems.CHICKEN_STEW.get())) { soup = SoupType.CHICKEN; }
         else if (output.is(ModItems.VEGETABLE_STEW.get())) { soup = SoupType.VEGETABLE; }
-        // REMOVE ITEMS FROM SLOTS
+        // Remove items from the ingredient slots
         inventory.extractItem(INPUT_SLOT1, 1, false);
         inventory.extractItem(INPUT_SLOT2, 1, false);
         inventory.extractItem(INPUT_SLOT3, 1, false);
