@@ -295,11 +295,19 @@ public class CauldronBlockEntity extends BlockEntity implements MenuProvider {
         else if (output.is(ModItems.CHICKEN_STEW.get())) { soup = SoupType.CHICKEN; }
         else if (output.is(ModItems.VEGETABLE_STEW.get())) { soup = SoupType.VEGETABLE; }
         // Remove items from the ingredient slots
-        inventory.extractItem(INPUT_SLOT1, 1, false);
-        inventory.extractItem(INPUT_SLOT2, 1, false);
-        inventory.extractItem(INPUT_SLOT3, 1, false);
+
+        extractItem(INPUT_SLOT1);
+        extractItem(INPUT_SLOT2);
+        extractItem(INPUT_SLOT3);
         com.pigmyy.cookingmod.block.custom.Cauldron.changeSoupState(this.level, this.worldPosition, soup);
     }
+
+    private void extractItem(int slot) {
+        if (inventory.getStackInSlot(slot).is(Items.HONEY_BOTTLE)) {
+            inventory.setStackInSlot(slot, new ItemStack(Items.GLASS_BOTTLE));
+        } else { inventory.extractItem(slot, 1, false); }
+    }
+
 
     private boolean hasCookingFinished() {
         return this.progress >= this.maxProgress;

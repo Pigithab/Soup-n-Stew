@@ -122,9 +122,7 @@ public class Cauldron extends BaseEntityBlock {
     // burns players when they step inside ( while cooking )
     @Override
     public void entityInside(BlockState pState, Level pLevel, BlockPos pPos, net.minecraft.world.entity.Entity pEntity) {
-        // if only allows ServerSide and Takes a specific instance of a cauldron as cauldronBE
         if (!pLevel.isClientSide() && pLevel.getBlockEntity(pPos) instanceof CauldronBlockEntity cauldronBe) {
-            //
             if (cauldronBe.isCooking) {
                 cauldronBe.damageLivingEntity(pEntity, pLevel);
             }
