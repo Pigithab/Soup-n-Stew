@@ -150,7 +150,7 @@ public class Cauldron extends BaseEntityBlock {
                 pLevel.playSound(null, pPos, SoundEvents.BUCKET_EMPTY, SoundSource.BLOCKS, 1.0F, 1.0F);
             }
         // REMOVE WATER
-        } else if (pStack.is(Items.BUCKET) && pState.getValue(LEVEL) == 3) {
+        } else if (pStack.is(Items.BUCKET) && pState.getValue(LEVEL) == 3 && pState.getValue(SOUPTYPE) == SoupType.WATER) {
             if (!pLevel.isClientSide()) {
                 // Reset LEVEL and SOUPTYPE
                 pLevel.setBlockAndUpdate(pPos, pState.setValue(LEVEL, 0).setValue(SOUPTYPE, SoupType.WATER));
@@ -204,10 +204,10 @@ public class Cauldron extends BaseEntityBlock {
             pLevel.playSound(null, pPos, SoundEvents.FROG_EAT, SoundSource.BLOCKS, 2.0F, 1.0F);
 
 
-        // OPEN MENU
+        // OPEN GUI
         }else if (pLevel.getBlockEntity(pPos) instanceof CauldronBlockEntity cauldronBlockEntity) {
             if((!pPlayer.isCrouching() && !pLevel.isClientSide) || (pPlayer.isCrouching() && !pLevel.isClientSide && pStack.isEmpty())){
-                ((ServerPlayer) pPlayer).openMenu(new SimpleMenuProvider(cauldronBlockEntity, Component.literal("Cauldron")), pPos);
+                ((ServerPlayer) pPlayer).openMenu(new SimpleMenuProvider(cauldronBlockEntity, Component.literal("Cooking Cauldron")), pPos);
                 return ItemInteractionResult.SUCCESS;
             }
 

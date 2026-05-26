@@ -26,17 +26,7 @@ public class ModCreativeModeTabs {
                         output.accept(ModBlocks.CAULDRON.get());
                         output.accept(Items.WATER_BUCKET);
                         output.accept(Items.COAL);
-
-                        output.accept(ModItems.FISH_STEW.get());
-                        output.accept(ModItems.PORK_STEW.get());
-                        output.accept(ModItems.BEEF_STEW.get());
-                        output.accept(ModItems.ROTTEN_STEW.get());
-                        output.accept(ModItems.CHICKEN_STEW.get());
-                        output.accept(ModItems.PUMPKIN_SOUP.get());
-                        output.accept(ModItems.VEGETABLE_STEW.get());
-                        output.accept(Items.MUSHROOM_STEW);
-                        output.accept(Items.RABBIT_STEW);
-                        output.accept(Items.BEETROOT_SOUP);
+                        output.accept(Items.BOWL);
 
                         output.accept(Items.BROWN_MUSHROOM);
                         output.accept(Items.RED_MUSHROOM);
@@ -53,6 +43,17 @@ public class ModCreativeModeTabs {
                         output.accept(Items.HONEY_BOTTLE);
                         output.accept(Items.SUGAR);
                         output.accept(Items.ROTTEN_FLESH);
+
+                        output.accept(ModItems.FISH_STEW.get());
+                        output.accept(ModItems.PORK_STEW.get());
+                        output.accept(ModItems.BEEF_STEW.get());
+                        output.accept(ModItems.ROTTEN_STEW.get());
+                        output.accept(ModItems.CHICKEN_STEW.get());
+                        output.accept(ModItems.PUMPKIN_SOUP.get());
+                        output.accept(ModItems.VEGETABLE_STEW.get());
+                        output.accept(Items.MUSHROOM_STEW);
+                        output.accept(Items.RABBIT_STEW);
+                        output.accept(Items.BEETROOT_SOUP);
 
 
 
