@@ -47,6 +47,8 @@ When the process is finished the water switches colours depending on the type of
 Right-clicking with a bowl will give the player a bowl of the stew and lower the water level by 1, the Cauldron can hold up to 3 layers of water / stew.
 ![Cauldron -1](screenshots/Cauldron%20-1.png)
 Soup/stew can be cleared at any level by right-clicking with a Water Bucket to rinse it.
+## Showcase Video
+[Soup & Stew Mod Showcase](https://youtu.be/7-M2OeI_qbg)
 ## How to Use
 ### with .jar file
 #### 1. Download the mods .jar file

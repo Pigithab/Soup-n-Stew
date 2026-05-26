@@ -201,13 +201,12 @@ public class CauldronBlockEntity extends BlockEntity implements MenuProvider {
     }
 
 
-        // EVERY TICK EXECUTE FOLLOWING CODE ( COOKING PROCESS )
 
 
     public void tick(Level level, BlockPos blockPos, BlockState blockState) {
         boolean sameRecipe = sameRecipe();
         addFuel();
-        if(hasRecipe() && hasWater() && hasFuel() && sameRecipe) { // Check if Recipe is Correct and if the Cauldron has water and fuel
+        if(hasWater() && hasFuel() && hasRecipe() && sameRecipe) { // Check if Recipe is Correct and if the Cauldron has water and fuel
             increaseCookingProgress(); // Increases CookingProgress by 1
             playAnimation();
             setChanged(level, blockPos, blockState);
@@ -226,7 +225,6 @@ public class CauldronBlockEntity extends BlockEntity implements MenuProvider {
     }
 
 
-    // END OF COOKING PROCESS
 
 
 
@@ -257,8 +255,9 @@ public class CauldronBlockEntity extends BlockEntity implements MenuProvider {
 
     private void addFuel() {
         int itemBurnDuration = net.minecraftforge.common.ForgeHooks.getBurnTime(inventory.getStackInSlot(FUEL_SLOT), RecipeType.SMELTING);
-        // if the item can give fuel && its fuel can fit inside the maxFuel
+        // checks timer to see if it should take fuel yet
         if (fuelTimer > 0) { fuelTimer --; }
+        // if the item can give fuel && its fuel can fit inside the maxFuel
         else if (itemBurnDuration != 0 && itemBurnDuration + fuelLeft < maxFuel) {
             fuelLeft += itemBurnDuration;
             inventory.extractItem(FUEL_SLOT, 1, false);
@@ -274,7 +273,7 @@ public class CauldronBlockEntity extends BlockEntity implements MenuProvider {
 
     private void resetProgress() {
         // max progress reset just in case some recipes take longer ( not a feature yet )
-        this.progress = 0;
+        progress = 0;
         maxProgress = 400;
         isCooking = false;
     }
