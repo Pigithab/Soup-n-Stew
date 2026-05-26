@@ -17,43 +17,44 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import java.util.Optional;
 
+// inputItem2 & 3 are defined as optional since recipes dont always have 3 ingredients
 public record CauldronRecipe(Ingredient inputItem1, Optional<Ingredient> inputItem2, Optional<Ingredient> inputItem3, ItemStack output) implements Recipe<CauldronRecipeInput> {
     @Override
     public NonNullList<Ingredient> getIngredients() {
+        // create the list of the ingredients, depending on the amount
         NonNullList<Ingredient> list = NonNullList.create();
         list.add(inputItem1);
         inputItem2.ifPresent(list::add);
         inputItem3.ifPresent(list::add);
         return list;
     }
-
+    // Checks if items inside the cauldron match the recipe
     @Override
     public boolean matches(CauldronRecipeInput pInput, Level pLevel) {
 
-        if(pLevel.isClientSide()) {
-
-            return false;
-        }
-
+        if(pLevel.isClientSide()) { return false; }
+        // counts how many slots aren't empty
         int totalNonEmptySlots = 0;
         for (ItemStack stack : pInput.inputs()) {
             if (!stack.isEmpty()) {
                 totalNonEmptySlots++;
             }
         }
-
+        // counts how many ingredients the recipe needs
         int requiredIngredientsCount = 1;
         if (inputItem2.isPresent()) requiredIngredientsCount++;
         if (inputItem3.isPresent()) requiredIngredientsCount++;
 
+        // compares if the recipe and the items have the same count
         if (totalNonEmptySlots != requiredIngredientsCount) {
             return false;
         }
 
+
         boolean match1 = false;
         boolean match2 = !inputItem2.isPresent();
         boolean match3 = !inputItem3.isPresent();
-
+        // check each ingredient individually regardless of order
         for (ItemStack stack : pInput.inputs()) {
             if (!stack.isEmpty()) {
                 if (!match1 && inputItem1.test(stack)) {
@@ -95,6 +96,8 @@ public record CauldronRecipe(Ingredient inputItem1, Optional<Ingredient> inputIt
     }
 
     public static class Serializer implements RecipeSerializer<CauldronRecipe> {
+
+        // define how to read the json file to get the recipe
         public static final MapCodec<CauldronRecipe> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
                 Ingredient.CODEC_NONEMPTY.fieldOf("ingredient1").forGetter(CauldronRecipe::inputItem1),
                 Ingredient.CODEC_NONEMPTY.optionalFieldOf("ingredient2").forGetter(CauldronRecipe::inputItem2),
@@ -102,6 +105,7 @@ public record CauldronRecipe(Ingredient inputItem1, Optional<Ingredient> inputIt
                 ItemStack.CODEC.fieldOf("result").forGetter(CauldronRecipe::output)
         ).apply(inst, CauldronRecipe::new));
 
+        // defines how to recipe data between server and client
         public static final StreamCodec<RegistryFriendlyByteBuf, CauldronRecipe> STREAM_CODEC =
                 StreamCodec.composite(
                         Ingredient.CONTENTS_STREAM_CODEC, CauldronRecipe::inputItem1,

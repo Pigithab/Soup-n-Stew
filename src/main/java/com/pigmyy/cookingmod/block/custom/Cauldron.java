@@ -119,14 +119,17 @@ public class Cauldron extends BaseEntityBlock {
         pLevel.setBlockAndUpdate(pPos, pState.setValue(SOUPTYPE, type));
     }
 
-    // burns players but isnt synced with cooking yet ( needs to be in CauldronBlockEntitiy.java to trigger only when cooking )
+    // burns players when they step inside ( while cooking )
     @Override
     public void entityInside(BlockState pState, Level pLevel, BlockPos pPos, net.minecraft.world.entity.Entity pEntity) {
-        if (pState.getValue(LEVEL) > 0) {
-            if (pEntity instanceof net.minecraft.world.entity.LivingEntity livingEntity) {
-                livingEntity.hurt(pLevel.damageSources().hotFloor(), 1.0F);
+        // if only allows ServerSide and Takes a specific instance of a cauldron as cauldronBE
+        if (!pLevel.isClientSide() && pLevel.getBlockEntity(pPos) instanceof CauldronBlockEntity cauldronBe) {
+            //
+            if (cauldronBe.isCooking) {
+                cauldronBe.damageLivingEntity(pEntity, pLevel);
             }
         }
+
         super.entityInside(pState, pLevel, pPos, pEntity);
     }
 
@@ -192,8 +195,10 @@ public class Cauldron extends BaseEntityBlock {
                 case CHICKEN   -> new ItemStack(ModItems.CHICKEN_STEW.get());
                 case PUMPKIN   -> new ItemStack(ModItems.PUMPKIN_SOUP.get());
                 case VEGETABLE -> new ItemStack(ModItems.VEGETABLE_STEW.get());
+                // this shouldn't be possible since I am checking for SoupType != WATER but to make intellij shut up it gives you back a bowl
                 default -> new ItemStack(Items.BOWL);
             };
+
             pPlayer.setItemInHand(pHand, net.minecraft.world.item.ItemUtils.createFilledResult(pStack, pPlayer, stew));
 
 

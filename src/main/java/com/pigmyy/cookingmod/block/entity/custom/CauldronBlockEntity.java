@@ -88,6 +88,7 @@ public class CauldronBlockEntity extends BlockEntity implements MenuProvider {
     private int maxFuel = 20000;
     private int fuelTimer = 0;
     private String cookingRecipe = "";
+    public boolean isCooking = false;
 
 
     public CauldronBlockEntity(BlockPos pPos, BlockState pBlockState) {
@@ -158,6 +159,7 @@ public class CauldronBlockEntity extends BlockEntity implements MenuProvider {
         pTag.putInt("cauldron.max_fuel", maxFuel);
         pTag.putInt("cauldron.fuel_timer", fuelTimer);
         pTag.putString("cauldron.cookingRecipe", cookingRecipe);
+        pTag.putBoolean("cauldron.isCooking", isCooking);
     }
     // LOAD
     @Override
@@ -170,6 +172,7 @@ public class CauldronBlockEntity extends BlockEntity implements MenuProvider {
         maxFuel = pTag.getInt("cauldron.max_fuel");
         fuelTimer = pTag.getInt("cauldron.fuel_timer");
         cookingRecipe = pTag.getString("cauldron.cookingRecipe");
+        isCooking = pTag.getBoolean("cauldron.isCooking");
     }
 
 
@@ -273,6 +276,7 @@ public class CauldronBlockEntity extends BlockEntity implements MenuProvider {
         // max progress reset just in case some recipes take longer ( not a feature yet )
         this.progress = 0;
         maxProgress = 400;
+        isCooking = false;
     }
 
     private void cookStew() {
@@ -304,6 +308,7 @@ public class CauldronBlockEntity extends BlockEntity implements MenuProvider {
     private void increaseCookingProgress() {
         progress++;
         fuelLeft--;
+        isCooking = true;
     }
 
     private boolean hasRecipe() {
@@ -364,6 +369,14 @@ public class CauldronBlockEntity extends BlockEntity implements MenuProvider {
                         1.0D
                 );
             }
+
+
+        }
+    }
+
+    public void damageLivingEntity(net.minecraft.world.entity.Entity pEntity, Level pLevel) {
+        if (pEntity instanceof net.minecraft.world.entity.LivingEntity livingEntity) {
+            livingEntity.hurt(pLevel.damageSources().hotFloor(), 1.0F);
         }
     }
 }
